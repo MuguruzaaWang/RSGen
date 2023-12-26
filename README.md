@@ -2,7 +2,7 @@
 This is the Pytorch implementation for [What Can Rhetoric Bring Us? Incorporating Rhetorical Structure into Automatic Related Work Generation]
 
 <p align="center">
- <img src="images/model_arc.png" width="700"/>
+ <img src="images/model.pdf" width="700"/>
 </p>
 
 ## Requirements
