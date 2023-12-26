@@ -17,47 +17,28 @@ This is the Pytorch implementation for [What Can Rhetoric Bring Us? Incorporatin
 ## Usage
 1. Create folder `trained_model`, `result` , `log` under the root directory.
 
-2. Download Multi-Xscience Dataset from [here](https://github.com/yaolu/Multi-XScience), TAD and TAS2 Dataset from [here]()
+2. Download Multi-Xscience Dataset from [here](https://github.com/yaolu/Multi-XScience), TAD and TAS2 Dataset from [here](https://github.com/iriscxy/Target-aware-RWG)
 
-3. Train a Dygie++ model for extracting entitie and relations from [here](https://github.com/dwadden/dygiepp).
+3. Download scibert from [here](https://huggingface.co/allenai/scibert_scivocab_uncased/tree/main) and place it under the Rhetorical_Function_Classification folder.
 
-4. Dataset Format and Dataset Preprocessing:
-    * 4.1 The format of the input files are shown in folder `example_data` , including `**.label.jsonl`, `**.ent_type_relation.jsonl`,`**.ent_promptsummary.jsonl`, `**.ent_importance_score.jsonl`, `**_summary.ent_importance_score.jsonl` and `output_**_processed_coref.json`.
-    
-    * 4.2 Extract entities and relations for Multi-Xscience using Dygie++. The output file is `output_**_processed_coref.json`.
-    Postprocess the output file `output_**_processed_coref.json` to the format of `**.ent_type_relation.jsonl`
-    
-    * 4.3 Using RAKE algorithm on `output_**_processed_coref.json` to calculate RAKE score for each entity candidate. 
-    ```
-    python script/keyphrase_extract.py
-    ```
-    
-    * 4.4 Create KGText samples using `**_summary.ent_importance_score.jsonl`.
-    ```
-    python script/add_prompt_info.py
-    ```
+4. Train the sentence-level rhetorical classifier using
 
-## Training a new model
+```bash
+bash ./Rhetorical_Function_Classification/train.sh
+```
+
+5. Using the rhetorical classifier to label the rhetorical functions of Multi-Xscience, TAD,and TAS2 datasets. 
+
+6. Train RSGen using
 ```bash
 export PYTHONPATH=.
 
-CUDA_LAUNCH_BLOCKING=1 python train.py  --mode train --cuda  --data_dir <path-to-datasets-folder> --batch_size 4 --seed 666 --train_steps 100000 --save_checkpoint_steps 4000  --report_every 1  --visible_gpus 0 --gpu_ranks 0  --world_size 1 --accum_count 2 --dec_dropout 0.1 --enc_dropout 0.1  --model_path  <path-to-trained-model-folder>  --log_file <path-to-log-file>  --inter_layers 6,7 --inter_heads 8 --hier --doc_max_timesteps 50 --prop 3 --min_length1 100 --no_repeat_ngram_size1 3 --sep_optim false --num_workers 5 --lr_dec 0.05 --warmup_steps 8000 --lr 0.005 --enc_layers 6  --dec_layers 6 --use_nucleus_sampling false --label_smoothing 0.1 --entloss_weight 1 
+python train.py  --mode train --cuda  --data_dir <path-to-datasets-folder> --batch_size 2 --cls_batch_size 64 --seed 666 --train_steps 80000 --save_checkpoint_steps 4000  --report_every 1  --visible_gpus 0 --gpu_ranks 0  --world_size 1 --accum_count 2 --dec_dropout 0.1 --enc_dropout 0.1  --model_path  ./trained_model/model_name  --log_file ./log/train_source.txt  --inter_layers 6,7 --gat_heads 4 --inter_heads 8 --hier --doc_max_timesteps 50 --use_bert false --prop 6 --sep_optim false --num_workers 5 --warmup_steps 8000 --lr 0.005 --enc_layers 6  --dec_layers 6 --use_nucleus_sampling false --label_smoothing 0.1
 ```
 
-## Test
+7. Test with RSGen:
 ```bash
 export PYTHONPATH=.
 
 python train.py  --mode test --cuda  --data_dir <path-to-datasets-folder> --batch_size 8 --valid_batch_size 8 --seed 666   --visible_gpus 0 --gpu_ranks 0 --dec_dropout 0.1 --enc_dropout 0.1  --lr 0.2 --label_smoothing 0.0  --log_file <path-to-log-file>  --inter_layers 6,7 --inter_heads 8 --doc_max_timesteps 50 --use_bert false --report_rouge --alpha 0.4 --max_length 400 --result_path <path-to-result-folder> --prop 3 --test_all false --sep_optim false   --use_bert false  --use_nucleus_sampling false --min_length1 100 --min_length2 110 --no_repeat_ngram_size1 3 --no_repeat_ngram_size2 3 --test_from <path-to-saved-model-checkpoint>
-```
-
-## References
-```
-@inproceedings{wang2022multi,
-  title={Multi-Document Scientific Summarization from a Knowledge Graph-Centric View},
-  author={Wang, Pancheng and Li, Shasha and Pang, Kunyuan and He, Liangliang and Li, Dong and Tang, Jintao and Wang, Ting},
-  booktitle={Proceedings of the 29th International Conference on Computational Linguistics},
-  pages={6222--6233},
-  year={2022}
-}
 ```
