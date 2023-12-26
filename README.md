@@ -2,7 +2,7 @@
 This is the Pytorch implementation for [What Can Rhetoric Bring Us? Incorporating Rhetorical Structure into Automatic Related Work Generation]
 
 <p align="center">
- <img src="images/model.pdf" width="700"/>
+ <img src="images/model.png" width="700"/>
 </p>
 
 ## Requirements
@@ -17,7 +17,7 @@ This is the Pytorch implementation for [What Can Rhetoric Bring Us? Incorporatin
 ## Usage
 1. Create folder `trained_model`, `result` , `log` under the root directory.
 
-2. Download Multi-Xscience Dataset from [here](https://github.com/yaolu/Multi-XScience).
+2. Download Multi-Xscience Dataset from [here](https://github.com/yaolu/Multi-XScience), TAD and TAS2 Dataset from [here]()
 
 3. Train a Dygie++ model for extracting entitie and relations from [here](https://github.com/dwadden/dygiepp).
 
