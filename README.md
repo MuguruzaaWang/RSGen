@@ -1,5 +1,7 @@
 # What Can Rhetoric Bring Us? Incorporating Rhetorical Structure into Automatic Related Work Generation
-This is the Pytorch implementation for [What Can Rhetoric Bring Us? Incorporating Rhetorical Structure into Automatic Related Work Generation]
+This is the Pytorch implementation for our paper: What Can Rhetoric Bring Us? Incorporating Rhetorical Structure into Automatic Related Work Generation.
+
+Submitted to Expert Systems with Applications.
 
 <p align="center">
  <img src="images/model.png" width="700"/>
